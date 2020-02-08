@@ -26,7 +26,7 @@ CONST
     ERR_CODE = 1
 TYPE
     VARS = STRUCTURE
-        data: ARRAY[100] OF INTEGER
+        data: ARRAY[MAX_DATA] OF INTEGER
         data_i: INTEGER
     ENDSTRUCTURE
 VAR
