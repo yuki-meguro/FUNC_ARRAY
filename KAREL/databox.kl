@@ -1,0 +1,149 @@
+--* coding: Shift-jis *--
+--
+--  --------------------------------------
+--  Released under the Apache 2.0 License.
+--  Yuki Meguro
+--  --------------------------------------
+--
+--  --------------------------------------
+--  Author: Yuki Meguro
+--
+--  Description:
+--
+--
+--  Dependancies: none
+--  --------------------------------------
+
+PROGRAM DATABOX
+%SYSTEM
+%NOLOCKGROUP
+%NOPAUSESHFT
+%NOPAUSE=ERROR+COMMAND+TPENABLE
+%COMMENT = 'v1.0'
+CONST
+    MAX_DATA = 100
+    PASS_CODE = 0
+    ERR_CODE = 1
+TYPE
+    VARS = STRUCTURE
+        data: ARRAY[100] OF INTEGER
+        data_i: INTEGER
+    ENDSTRUCTURE
+VAR
+    list IN CMOS: VARS
+
+    ROUTINE ListClear: INTEGER
+    VAR
+        i: INTEGER
+    BEGIN
+        FOR i = 1 TO MAX_DATA DO
+            list.data[i] = 0
+        ENDFOR
+        list.data_i = 0
+        RETURN(PASS_CODE)
+    END ListClear
+
+    ROUTINE ListAppend(int_val: INTEGER): INTEGER
+    BEGIN
+        IF list.data_i >= MAX_DATA THEN
+            RETURN(ERR_CODE)
+        ELSE
+            list.data_i = list.data_i + 1
+            list.data[list.data_i] = int_val
+            RETURN(PASS_CODE)
+        ENDIF
+        
+    END ListAppend
+
+    ROUTINE ListInsert(no: INTEGER; int_val: INTEGER): INTEGER
+    VAR
+        i: INTEGER
+    BEGIN
+        IF list.data_i >= MAX_DATA THEN
+            RETURN(ERR_CODE)
+        ELSE
+            IF no > list.data_i THEN
+                RETURN(ERR_CODE)
+            ELSE
+                FOR i = (list.data_i + 1) DOWNTO no DO
+                    IF i <> 1 THEN
+                        list.data[i] = list.data[i-1]
+                    ELSE
+                        list.data[i] = 0
+                    ENDIF
+                ENDFOR
+                list.data[no] = int_val
+                list.data_i = list.data_i + 1
+                RETURN(PASS_CODE)
+            ENDIF
+        ENDIF
+    END ListInsert
+
+    ROUTINE ListDelete(no: INTEGER): INTEGER
+    VAR
+        i: INTEGER
+    BEGIN
+        IF no > list.data_i THEN
+            RETURN(ERR_CODE)
+        ELSE
+            FOR i = (no + 1) TO list.data_i DO
+                list.data[i-1] = list.data[i]
+            ENDFOR
+            list.data[list.data_i] = 0
+            list.data_i = list.data_i - 1
+        ENDIF
+        RETURN(PASS_CODE)
+    END ListDelete
+
+    ROUTINE ListVal(no: INTEGER): INTEGER
+    BEGIN
+        IF no > list.data_i THEN
+            RETURN(ERR_CODE)
+        ELSE
+            RETURN(list.data[no])
+        ENDIF
+    END ListVal
+
+    ROUTINE ListLen: INTEGER
+    BEGIN
+        RETURN(list.data_i)
+    END ListLen
+
+    ROUTINE ListIn(target: INTEGER): BOOLEAN
+    VAR
+        i: INTEGER
+    BEGIN
+        FOR i = 1 TO list.data_i DO
+            IF list.data[i] = target THEN
+                RETURN(TRUE)
+            ENDIF
+        ENDFOR
+        RETURN(FALSE)
+    END ListIn
+
+    ROUTINE ListSort: INTEGER
+    VAR
+        i,j: INTEGER
+        min_int: INTEGER
+        int_val: INTEGER
+    BEGIN
+        IF list.data_i = 0 THEN
+            RETURN(ERR_CODE)
+        ELSE
+            FOR i = 1 TO list.data_i DO
+                min_int = i
+                FOR j = (i+1) TO list.data_i DO
+                    IF list.data[min_int] > list.data[j] THEN
+                        min_int = j
+                    ENDIF
+                ENDFOR
+                int_val = list.data[min_int]
+                list.data[min_int] = list.data[i]
+                list.data[i] = int_val
+            ENDFOR
+            RETURN(PASS_CODE)
+        ENDIF
+    END ListSort
+
+BEGIN
+END DATABOX

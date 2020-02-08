@@ -1,0 +1,24 @@
+--* coding: Shift-jis *--
+--
+--  --------------------------------------
+--  Released under the Apache 2.0 License.
+--  Yuki Meguro
+--  --------------------------------------
+--
+--  --------------------------------------
+--  Author: Yuki Meguro
+--
+--  Description:
+--      Header file
+--
+--  Dependancies: ./databox.kl
+--  --------------------------------------
+
+ROUTINE ListClear:INTEGER FROM DATABOX
+ROUTINE ListAppend(int: INTEGER):INTEGER FROM DATABOX
+ROUTINE ListDelete(no: INTEGER):INTEGER FROM DATABOX
+ROUTINE ListInsert(no:INTEGER; int: INTEGER): INTEGER FROM DATABOX
+ROUTINE ListVal(no: INTEGER): INTEGER FROM DATABOX
+ROUTINE ListLen: INTEGER FROM DATABOX
+ROUTINE ListIn(target: INTEGER): BOOLEAN FROM DATABOX
+ROUTINE ListSort: INTEGER FROM DATABOX
