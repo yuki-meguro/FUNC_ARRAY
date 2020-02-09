@@ -52,7 +52,7 @@ databox.kl をビルドして下さい。
 - 引数 1(integer)  
   挿入したい位置
 
-- 引数 2(integer)
+- 引数 2(integer)  
   挿入したい要素
 
 - 戻り値(integer)  
