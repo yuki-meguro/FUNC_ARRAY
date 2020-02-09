@@ -1,0 +1,84 @@
+--* coding: Shift-jis *--
+--
+--  --------------------------------------
+--  Released under the Apache 2.0 License.
+--  Yuki Meguro
+--  --------------------------------------
+--
+--  --------------------------------------
+--  Author: Yuki Meguro
+--
+--  Description:
+--
+--
+--  Dependancies: databox.kl
+--  --------------------------------------
+
+PROGRAM EX01
+%SYSTEM
+%NOLOCKGROUP
+%NOPAUSESHFT
+%NOPAUSE=ERROR+COMMAND+TPENABLE
+%COMMENT = 'Example program'
+VAR
+    status: INTEGER
+    i, j: INTEGER
+    %INCLUDE includes/databox.h
+
+    -- 疑似乱数生成用関数
+    ROUTINE Random(seed : INTEGER) : INTEGER
+    CONST
+        INCREMENT = 13849
+        MODULUS = 65536
+        MULTIPLIER = 25173
+        MAX_NUM = 100
+    VAR
+        calc_int: INTEGER
+    	calc_real: REAL
+    BEGIN
+        DELAY 5
+    	calc_int = seed + $FAST_CLOCK
+        calc_int = (calc_int * MULTIPLIER + INCREMENT) MOD MODULUS
+        calc_real = calc_int / 65535.0
+		RETURN(ROUND(ABS(calc_real * MAX_NUM)))
+    END Random
+
+
+BEGIN
+    -- リストの初期化
+    status = ListClear
+
+    -- リストに要素の追加
+    FOR i = 1 TO 30 DO
+        status = ListAppend(Random(i))
+    ENDFOR
+
+    -- リストの1番目に 1234 を追加
+    status = ListInsert(1, 1234)
+    
+    -- リストの3番目要素を削除
+    status = ListDelete(3)
+    
+    -- リストをソート
+    status = ListSort
+    
+    -- ユーザ画面を初期化
+    WRITE(CHR(137),CHR(128))
+    FORCE_SPMENU(TP_PANEL,SPI_TPUSER,1)
+    WRITE(' ------ Print List ------', CR)
+
+    -- リストの長さを出力
+    WRITE(' List Length:')
+    WRITE(ListLen)
+    WRITE(CR, CR)
+    
+    -- リストの要素を出力
+    FOR i = 1 TO 5 DO
+        FOR j = 1 TO 6 DO
+            WRITE(ListVal(6 * i - 6 + j))
+            WRITE(' ')
+        ENDFOR
+        WRITE(CR)
+    ENDFOR
+
+END EX01
